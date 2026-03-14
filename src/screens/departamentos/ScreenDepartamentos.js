@@ -1,21 +1,19 @@
-import React, { useState, useEffect, useCallback, use } from 'react';
-import { useFocusEffect} from '@react-navigation/native';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-import style from '../../styeles/styleDepartamentos';
+import style from '../../styles/StyleDepartamentos';
 import cst from '../../../constants';
 
 const ScreenDepartamentos = () => {
-
+    const navigation = useNavigation();
     const [categorias, setCategorias] = useState([]);
     const [loading, setLoading] = useState(true);
 
     async function getDepartamentos() {
         try {
-            const req = await axios.get(`${cst.BASE_URL}/categorias/getcategorias`);
+            const req = await axios.get(`${cst.URL_API}/categorias/getcategorias`);
             let dados = Object.values(req.data.dados);
             setCategorias(dados || []);
             setLoading(false);
@@ -47,7 +45,11 @@ const ScreenDepartamentos = () => {
                         return(
                         <React.Fragment key={iten.id.categoriaid}>
                             <View style={style.rowcat}>
-                                <TouchableOpacity style={style.tochablecate}>
+                                <TouchableOpacity 
+                                style={style.tochablecate} 
+                                onPress={() => navigation.navigate('categorias', 
+                                {idcate: iten.id.categoriaid, namecate: iten.id.namecategoria})
+                                }>
                                     <Text style={style.txtcat}>{iten.id.namecategoria}</Text>
                                 </TouchableOpacity>
                             </View>
@@ -56,7 +58,15 @@ const ScreenDepartamentos = () => {
                                 var isLastSub = index === arraySub.length - 1;
                                 return(
                                     <View style={style.rowsubcate} key={sub.subcategoriaid}>
-                                        <TouchableOpacity style={[style.tochablesubcate, isLastSub && {borderBottomWidth: 0}]}>
+                                        <TouchableOpacity 
+                                        style={[style.tochablesubcate, isLastSub && {borderBottomWidth: 0}]}
+                                        onPress={() => navigation.navigate('subcategorias', {
+                                            idcate: iten.id.categoriaid,
+                                            namecate: iten.id.namecategoria,
+                                            idsubcate: sub.subcategoriaid,
+                                            namesubcate: sub.namesubcategoria
+                                        })}
+                                        >
                                             <Text style={style.txtsubcate}>» {sub.namesubcategoria}</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -73,34 +83,4 @@ const ScreenDepartamentos = () => {
     );
 };
 
-
-
 export default ScreenDepartamentos;
-
-
-// {loading ? (
-//                     <ActivityIndicator size="large" color="#000" style={{ marginTop: 20 }} />
-//                 ) : (
-//                     categorias.map((iten) => (
-//                         // Usamos o Fragment (<> </>) para agrupar a Categoria e suas Subcategorias
-//                         <React.Fragment key={iten.id.categoriaid}>
-                            
-//                             {/* Categoria Principal */}
-//                             <View style={style.rowcat}>
-//                                 <TouchableOpacity style={style.tochablecate}>
-//                                     <Text style={style.txtcat}>{iten.id.namecategoria}</Text>
-//                                 </TouchableOpacity>
-//                             </View>
-
-//                             {/* Subcategorias */}
-//                             {iten.id.subcategorias.map((sub) => (
-//                                 <View style={style.rowsubcate} key={sub.subcategoriaid}>
-//                                     <TouchableOpacity style={style.tochablesubcate}>
-//                                         <Text style={style.txtsubcate}>» {sub.namesubcategoria}</Text>
-//                                     </TouchableOpacity>
-//                                 </View>
-//                             ))}
-
-//                         </React.Fragment>
-//                     ))
-//                 )}

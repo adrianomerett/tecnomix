@@ -3,12 +3,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 import MainTabs from "./tabs/TabsNavigation";
 
-
 const Stack = createStackNavigator();
 
 export default function RootStack() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="main">
             <Stack.Screen
                 name="main"
                 component={MainTabs}

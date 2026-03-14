@@ -53,12 +53,17 @@ react {
 
     /* Autolinking */
     autolinkLibrariesWithApp()
+
+    //hermesCommand =  "C:/Users/Adriano/Documents/tecnomix/node_modules/hermes-compiler/hermesc/win64-bin/hermesc.exe"
+    hermesCommand =  "C:\\Users\\Adriano\\Documents\\tecnomix\\node_modules\\hermes-compiler\\hermesc\\win64-bin\\hermesc.exe"
+    
 }
 
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
 def enableProguardInReleaseBuilds = false
+//def hermesEnabled = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)

@@ -31,7 +31,7 @@ export default StyleSheet.create({
         paddingTop: 8,
     },
     txtcat:{
-        fontSize : 18,
+        fontSize : 16,
         fontWeight: 'bold',
         color: colors.primary
     },
@@ -50,7 +50,7 @@ export default StyleSheet.create({
     txtsubcate:{
         fontSize : 14,
         fontWeight: 'bold',
-        color: colors.primary
+        color: colors.tertiary
     },
     lastSubCategoria: {
         borderWidth: 0

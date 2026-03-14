@@ -5,8 +5,13 @@ export default colors = Object.freeze({
     tertiary: "#2d3f57",
     white: "#ffffff",
     gray: '#EEEEEE',
-    grayborder: '#ada8a8',
+    grayborder: '#c2bfbf',
+    grayfundo: '#DDD9D9',
+    graynavigation: '#818181',
 
     // Fonts
-    colorfont: "#e6eef8"
+    colorfont: "#e6eef8",
+    colortitleproduct: "#404040",
+    colorprice: '#ff0000',
+    colorsale: '#1eb368'
 });

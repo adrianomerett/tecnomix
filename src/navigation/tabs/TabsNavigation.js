@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 
 export default function MainTabs() {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator initialRouteName="home">
             <Tab.Screen
                 name="home"
                 component={StackHome}

@@ -1,10 +1,10 @@
 import React from "react";
-import { View, Text, StyleSheet, StatusBar } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const ScreenHome = () => {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+        <Text>Home</Text>
     </View>
   );
 };

@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ScreenHome from "../../screens/home/ScreenHome";
 import DefaultHeader from "../../components/DeaultHeader";
 
+
 const Stack = createStackNavigator();
 
 export default function StackHome() {

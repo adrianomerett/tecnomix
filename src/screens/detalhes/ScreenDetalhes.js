@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, FlatList, useWindowDimensions, ActivityIndicator } from 'react-native';
-import FontAweSome from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RenderHtml from "react-native-render-html";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
@@ -85,7 +85,7 @@ export default ScreenDetalhes = ({ route }) => {
                 </View>
                 <View style={StyleDetalhesProdutos.ctbuttom}>
                     <TouchableOpacity style={StyleDetalhesProdutos.btnshop}>
-                        <FontAweSome name="shopping-cart" size={20} color={colors.colorfont} />
+                        <Icon name="cart-variant" size={20} color={colors.colorfont} />
                         <Text style={StyleDetalhesProdutos.txtbtnshop}> Quero comprar</Text>
                     </TouchableOpacity>
                 </View>

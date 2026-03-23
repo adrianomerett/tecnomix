@@ -53,9 +53,7 @@ react {
 
     /* Autolinking */
     autolinkLibrariesWithApp()
-
-    //hermesCommand =  "C:/Users/Adriano/Documents/tecnomix/node_modules/hermes-compiler/hermesc/win64-bin/hermesc.exe"
-    hermesCommand =  "C:\\Users\\Adriano\\Documents\\tecnomix\\node_modules\\hermes-compiler\\hermesc\\win64-bin\\hermesc.exe"
+    hermesCommand =  "node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc"
     
 }
 

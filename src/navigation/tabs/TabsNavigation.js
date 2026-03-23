@@ -1,10 +1,10 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import StackHome from "../stacks/StackHome";
 import StackDepartamentos from "../stacks/StackDepartamentos";
 import StackProdutos from "../stacks/StackProdutos";
+import StackClientes from "../stacks/StackClients";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,9 +15,9 @@ export default function MainTabs() {
                 name="home"
                 component={StackHome}
                 options={{
-                    title: "Home",
+                    title: "Início",
                     headerShown: false,
-                    tabBarIcon: ({ color }) => <FontAwesome name="home" color={color} size={22} />
+                    tabBarIcon: ({ color }) => <Icon name="home" color={color} size={28} />
                 }}
             />
             <Tab.Screen
@@ -26,7 +26,7 @@ export default function MainTabs() {
                 options={{
                     title: "Departamentos",
                     headerShown: false,
-                    tabBarIcon: ({ color }) => <FontAwesome name="bars" color={color} size={22} />
+                    tabBarIcon: ({ color }) => <Icon name="layers" color={color} size={28} />
                 }}
             />
             <Tab.Screen
@@ -35,7 +35,16 @@ export default function MainTabs() {
                 options={{
                     title: "Produtos",
                     headerShown: false,
-                    tabBarIcon: ({ color }) => <FontAwesome name="shopping-basket" color={color} size={22} />
+                    tabBarIcon: ({ color }) => <Icon name="store" color={color} size={28} />
+                }}
+            />
+            <Tab.Screen
+                name="clientes"
+                component={StackClientes}
+                options={{
+                    title: "Perfil",
+                    headerShown: false,
+                    tabBarIcon: ({ color }) => <Icon name="account-circle-outline" color={color} size={28} />
                 }}
             />
         </Tab.Navigator>

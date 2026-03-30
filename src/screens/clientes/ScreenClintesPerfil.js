@@ -2,18 +2,35 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ScreenClintesPerfil = () => {
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+import styles from "../../styles/StyleClientePerfil";
+import StyleBreadcrumb from "../../styles/StyleBreadcrumb";
+
+import color from "../../theme/colors";
+
+const ScreenClintesPerfil = () => {
+    const [nome, setNome] = useState("");
+    const [email, setEmail] = useState("");
+    const [iniciais, setIniciais] = useState("");
     const navigation = useNavigation();
+
 
     useFocusEffect(
         useCallback(() => {
             const checkLogin = async () => {
                 try {
-                    const isLogged = await AsyncStorage.getItem("statuslogin");
-                    if (isLogged === "false" || isLogged === null) {
-                        navigation.replace("clientescadastrar");
-                    }
+                    // const isLogged = await AsyncStorage.getItem("statuslogin");
+                    // if (isLogged === "false" || isLogged === null) {
+                    //     navigation.replace("clienteslogin");
+                    // }
+                    const nomedb = await AsyncStorage.getItem("nome");
+                    const emaildb = await AsyncStorage.getItem("email");
+                    setNome(nomedb);
+                    setEmail(emaildb);
+                    var letteriniiciais = nome.split(" ");
+                    setIniciais(`${letteriniiciais[0][0]}${letteriniiciais[1][0]}`);
+                    // Recupera os dados do cliente
                 } catch (error) {
                     console.log(error);
                 }
@@ -22,9 +39,60 @@ const ScreenClintesPerfil = () => {
         }, [navigation])
     );
 
+    const logout = async () => {
+        try {
+            await AsyncStorage.setItem("statuslogin", "false");
+            await AsyncStorage.removeItem("clienteid");
+            await AsyncStorage.removeItem("nome");
+            await AsyncStorage.removeItem("email");
+            navigation.replace("clienteslogin");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
-        <View>
-            <Text>Perfil</Text>
+        <View style={styles.container}>
+            <View style={StyleBreadcrumb.breadcrumb}>
+                <TouchableOpacity onPress={() => navigation.navigate('home')}>
+                    <Text style={StyleBreadcrumb.activenavigation}>Início</Text>
+                </TouchableOpacity>
+                <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
+                <Text style={StyleBreadcrumb.inactivenavigation}> Minha conta </Text>
+            </View>
+            <View style={styles.containercadastro}>
+                <View style={styles.containericon}>
+                    <View style={styles.circleicon}>
+                        <View style={styles.fundoicon}>
+                            {/* <Icon name="account-circle-outline" size={60} color={color.white} /> */}
+                            <Text style={styles.iniciais}>{iniciais}</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.ctinfo}>
+                    <View style={styles.rows}>
+                        <Icon name="account-circle-outline" size={28} color={color.graynavigation} />
+                        <Text style={styles.txtinfoaccount}>{nome}</Text>
+                    </View>
+                    <View style={styles.rows}>
+                        <Icon name="email-multiple-outline" size={24} color={color.graynavigation} />
+                        <Text style={styles.txtinfoaccount}> {email}</Text>
+
+                    </View>
+                </View>
+                <View style={styles.ctactions}>
+                    <TouchableOpacity style={styles.rowsaction}>
+                        <Icon name="account-edit-outline" size={24} color={color.coloredit} />
+                        <Text style={[styles.txtinfoaccount, { color: color.coloredit }]}>Editar perfil</Text>
+                    </TouchableOpacity>
+                    <View style={styles.ctactions}>
+                        <TouchableOpacity style={styles.rowsaction} onPress={() => logout()}>
+                            <Icon name="logout" size={24} color={color.colordelete} />
+                            <Text style={[styles.txtinfoaccount, { color: color.colordelete }]}>Sair</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
         </View>
     )
 }

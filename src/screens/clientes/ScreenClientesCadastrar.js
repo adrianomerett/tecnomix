@@ -4,9 +4,6 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 import styles from "../../styles/StyeleCadastrarClientes";
 import StyleBreadcrumb from "../../styles/StyleBreadcrumb";
 
@@ -126,7 +123,9 @@ const ScreenClientesCadastrar = () => {
                     <Text style={StyleBreadcrumb.activenavigation}>Início</Text>
                 </TouchableOpacity>
                 <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
-                <Text style={StyleBreadcrumb.inactivenavigation}> Minha conta </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("clientesperfil")}>
+                    <Text style={StyleBreadcrumb.activenavigation}> Minha conta </Text>
+                </TouchableOpacity>
                 <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
                 <Text style={StyleBreadcrumb.inactivenavigation}> Cadastrar </Text>
             </View>
@@ -237,7 +236,7 @@ const ScreenClientesCadastrar = () => {
                     <Button
                         mode="contained"
                         style={{ marginTop: 10 }}
-                        onPress={() => navigation.navigate('clientescadastrar')}
+                        onPress={() => navigation.navigate('clienteslogin')}
                         theme={{
                             colors: {
                                 primary: color.primary

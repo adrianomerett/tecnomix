@@ -13,5 +13,8 @@ export default colors = Object.freeze({
     colorfont: "#e6eef8",
     colortitleproduct: "#404040",
     colorprice: '#ff0000',
-    colorsale: '#1eb368'
+    colorsale: '#1eb368',
+    // Buttons
+    coloredit: "#F1891AFF",
+    colordelete: "#D72222FF",
 });

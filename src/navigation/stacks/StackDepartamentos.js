@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 export default function StackDepartamentos() {
     return (
-        <Stack.Navigator screenOptions={{ header: () => <DefaultHeader /> }}>
+        <Stack.Navigator screenOptions={{ header: () => <DefaultHeader /> }} name="produtos">
             <Stack.Screen
                 name="departamentos"
                 component={ScreenDepartamentos}

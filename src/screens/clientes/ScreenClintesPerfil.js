@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -9,43 +9,46 @@ import StyleBreadcrumb from "../../styles/StyleBreadcrumb";
 
 import color from "../../theme/colors";
 
-const ScreenClintesPerfil = () => {
+const ScreenClintesPerfil = ({ setLogged, logged }) => {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [iniciais, setIniciais] = useState("");
     const navigation = useNavigation();
 
 
-    useFocusEffect(
-        useCallback(() => {
-            const checkLogin = async () => {
-                try {
-                    // const isLogged = await AsyncStorage.getItem("statuslogin");
-                    // if (isLogged === "false" || isLogged === null) {
-                    //     navigation.replace("clienteslogin");
-                    // }
-                    const nomedb = await AsyncStorage.getItem("nome");
-                    const emaildb = await AsyncStorage.getItem("email");
-                    setNome(nomedb);
-                    setEmail(emaildb);
-                    var letteriniiciais = nome.split(" ");
-                    setIniciais(`${letteriniiciais[0][0]}${letteriniiciais[1][0]}`);
-                    // Recupera os dados do cliente
-                } catch (error) {
-                    console.log(error);
+    useEffect(() => {
+        const checkLogin = async () => {
+            try {
+                const nomedb = await AsyncStorage.getItem("nome");
+                const emaildb = await AsyncStorage.getItem("email");
+                setNome(nomedb);
+                setEmail(emaildb);
+                if (nomedb) {
+                    const partes = nomedb.split(" ");
+                    const iniciais = `${partes[0][0]}${partes[1] ? partes[1][0] : ""}`;
+                    setIniciais(iniciais);
                 }
-            };
-            checkLogin();
-        }, [navigation])
-    );
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        checkLogin();
+    }, [logged]);
 
     const logout = async () => {
         try {
-            await AsyncStorage.setItem("statuslogin", "false");
-            await AsyncStorage.removeItem("clienteid");
-            await AsyncStorage.removeItem("nome");
-            await AsyncStorage.removeItem("email");
-            navigation.replace("clienteslogin");
+            Alert.alert("Atenção", "Deseja realmente sair?", [
+                { text: "Cancelar", style: "cancel" },
+                {
+                    text: "Ok",
+                    onPress: async () => {
+                        await AsyncStorage.setItem("statuslogin", "false");
+                        await AsyncStorage.removeItem("clienteid");
+                        setLogged(false);
+                    },
+                    style: "destructive"
+                }
+            ]);
         } catch (error) {
             console.log(error);
         }

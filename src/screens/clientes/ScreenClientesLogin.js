@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Alert } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput, Checkbox, Button } from 'react-native-paper';
@@ -12,13 +12,14 @@ import color from "../../theme/colors";
 import { validaemail } from "../../helpers/validacoes";
 import api from "../../api/api";
 
-const ScreenClintesPerfil = () => {
+const ScreenClintesPerfil = ({ setLogged }) => {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
     const [remember, setRemember] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorSenha, setErrorSenha] = useState(false);
+    const [loading, setLoading] = useState(false);
     const inputEmail = useRef(null);
     const inputSenha = useRef(null);
     const navigation = useNavigation();
@@ -33,9 +34,21 @@ const ScreenClintesPerfil = () => {
                 email: email,
                 senha: senha
             };
+            setLoading(true);
             const req = await api.post('/clientes/login', { dados: dados });
-            console.log(req.data);
+            setLoading(false);
+            const { status, msg, data } = req.data;
+            if (!status) {
+                ShowAlert('Erro', msg);
+                return false;
+            }
+            await AsyncStorage.setItem("statuslogin", "true");
+            await AsyncStorage.setItem("clienteid", String(data.clienteid));
+            await AsyncStorage.setItem("nome", String(data.nome));
+            await AsyncStorage.setItem("email", String(data.email));
+            setLogged(true);
         } catch (e) {
+            setLoading(false);
             console.log(e)
         }
     }
@@ -79,13 +92,15 @@ const ScreenClintesPerfil = () => {
     const changeRemember = async () => {
         setRemember(!remember);
         if (remember) {
-            await AsyncStorage.setItem('remember', 'true');
-        } else {
             await AsyncStorage.setItem('remember', 'false');
             await AsyncStorage.setItem('email', '');
             await AsyncStorage.setItem('senha', '');
             setEmail('');
             setSenha('');
+        } else {
+            await AsyncStorage.setItem('email', email);
+            await AsyncStorage.setItem('senha', senha);
+            await AsyncStorage.setItem('remember', 'true');
         }
     }
 
@@ -128,8 +143,17 @@ const ScreenClintesPerfil = () => {
         ]);
     }
 
+    const loader = () => {
+        return (
+            <View style={styles.containerloader}>
+                <ActivityIndicator size="large" color={color.primary} />
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
+            {loading ? loader() : null}
             <View style={StyleBreadcrumb.breadcrumb}>
                 <TouchableOpacity onPress={() => navigation.navigate('home')}>
                     <Text style={StyleBreadcrumb.activenavigation}>Início</Text>

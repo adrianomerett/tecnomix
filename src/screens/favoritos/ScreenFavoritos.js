@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import React, { useState, useCallback, useEffect } from "react";
+import { View, Text, TouchableOpacity, FlatList, useWindowDimensions, ActivityIndicator } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from "react-native-gesture-handler";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import api from "../../api/api";
-import cst from "../../../constants";
+import colors from "../../theme/colors";
 
 import style from "../../styles/StyleBoryList";
 import stylebreadcrumb from "../../styles/StyleBreadcrumb";
@@ -16,92 +16,60 @@ import LoaderFlatList from "../../components/LoaderFlatList";
 import LoaderFavoritos from "../../components/LoaderFavoritos";
 import SnackBarFavoritos from "../../components/SnackBarFavoritos";
 import EmptyList from "../../components/EmptyList";
-import FooterFlatList from "../../components/FooterFlatList";
-import colors from "../../theme/colors";
 
-const ScreenCategorias = ({ route }) => {
+export default ScreenFavoritos = () => {
     const navigation = useNavigation();
-    const { idcate, namecate } = route.params;
     const [produtos, setProdutos] = useState([]);
     const [favoritos, setFavoritos] = useState([]);
-    const [paginaatual, setPaginaatual] = useState(1);
-    const [totalpages, setTotalpages] = useState(0);
     const [loading, setloading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [refreshing, setrefreshing] = useState(false);
-    const [message, setMessage] = useState('Nenhum resultado encontrado...');
+    const [message, setMessage] = useState('Você não possui produtos adicionados aos favoritos.');
     const [loadingFavoritos, setLoadingFavoritos] = useState(false);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
-    async function getProducts(page) {
+    async function getFavoritos() {
         try {
-            if (page === 1) {
-                setloading(true);
-            } else {
-                setLoadingMore(true);
-            }
-            const getidclient = await AsyncStorage.getItem("clienteid");
-            const clienteid = getidclient == null || getidclient == undefined ? 0 : getidclient;
-            var req = await api.get('/categorias/listar/', {
-                params: {
-                    categoriaid: idcate,
-                    pagina_atual: page,
-                    por_pagina: cst.PAGINATION,
-                    clienteid: clienteid
-                }
-            });
-            var { status, dados, message, paginacao, dafavoritos } = req.data;
+            setloading(true);
+            const clientid = await AsyncStorage.getItem('clienteid');
+            const email = await AsyncStorage.getItem('email');
+            const senha = await AsyncStorage.getItem('senha');
+            const req = await api.get('/produtos/favoritos/', { params: { clientid: clientid, email: email, senha: senha } });
+            const { status, dados, message, dafavoritos } = req.data;
+            setloading(false);
             if (!status) {
                 setMessage(message);
                 return;
             }
-            setPaginaatual(page);
-            setTotalpages(paginacao.total_paginas);
-            if (page === 1) {
-                setProdutos(dados);
-            } else {
-                setProdutos((prev) => [...prev, ...dados]);
-            }
+            setProdutos(dados);
             setFavoritos(dafavoritos);
+        } catch (e) {
             setloading(false);
-        } catch (error) {
-            setMessage(message);
-            setloading(false);
-            console.log(error.message);
+            console.log(e);
         } finally {
             setloading(false);
-            setLoadingMore(false);
         }
     }
 
     useFocusEffect(
         useCallback(() => {
-            getProducts(paginaatual);
+            getFavoritos();
         }, [])
     );
 
     const onRefresh = useCallback(() => {
         setrefreshing(true);
-        setPaginaatual(1);
-        getProducts(1);
+        getFavoritos();
         setrefreshing(false);
     }, []);
 
-    const loadPages = () => {
-        if (loadingMore) return;
-        if (paginaatual < totalpages && !loading) {
-            const nextpagina = paginaatual + 1;
-            getProducts(nextpagina);
-        }
+    const changeSnackbar = () => {
+        setSnackbarVisible(!snackbarVisible);
     }
 
     if (loading) {
         return <LoaderFlatList />;
-    }
-
-    const changeSnackbar = () => {
-        setSnackbarVisible(!snackbarVisible);
     }
 
     return (
@@ -109,9 +77,9 @@ const ScreenCategorias = ({ route }) => {
             <View style={stylebreadcrumb.breadcrumb}>
                 <TouchableOpacity onPress={() => navigation.navigate('home')}><Text style={stylebreadcrumb.activenavigation}>Início</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('departamentos')}><Text style={stylebreadcrumb.activenavigation}>Departamentos</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('produtos')}><Text style={stylebreadcrumb.activenavigation}>Produtos</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
-                <Text style={stylebreadcrumb.inactivenavigation}> {namecate} </Text>
+                <Text style={stylebreadcrumb.inactivenavigation}> Favoritos </Text>
             </View>
             <View style={style.containerlist}>
                 <FlatList
@@ -126,12 +94,11 @@ const ScreenCategorias = ({ route }) => {
                             setSnackbarVisible={setSnackbarVisible}
                             setSnackbarMessage={setSnackbarMessage}
                             setProdutos={setProdutos}
-                            updateProducts={false}
+                            updateProducts={true}
                         />
                     )}
                     keyExtractor={(item) => item.produtoid.toString()}
                     ItemSeparatorComponent={SeparatorFlatList}
-                    onEndReached={loadPages}
                     onEndReachedThreshold={0.5}
                     ListEmptyComponent={<EmptyList message={message} />}
                     refreshControl={
@@ -141,13 +108,11 @@ const ScreenCategorias = ({ route }) => {
                             colors={[colors.primary]}
                         />
                     }
-                    ListFooterComponent={<FooterFlatList loadingMore={loadingMore} paginaatual={paginaatual} totalpages={totalpages} produtos={produtos} />}
                 />
                 {loadingFavoritos ? (<LoaderFavoritos />) : null}
                 <SnackBarFavoritos visible={snackbarVisible} message={snackbarMessage} changeSnackbar={changeSnackbar} />
             </View>
         </View>
     );
-};
 
-export default ScreenCategorias;
+};

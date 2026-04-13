@@ -17,4 +17,5 @@ export default colors = Object.freeze({
     // Buttons
     coloredit: "#F1891AFF",
     colordelete: "#D72222FF",
+    colornowfavorict: "rgb(236, 162, 162)",
 });

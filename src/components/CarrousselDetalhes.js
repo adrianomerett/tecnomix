@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, useWindowDimensions, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ActivityIndicator, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PagerView from "react-native-pager-view";
 
 import cst from "../../constants";
 import colors from "../theme/colors";
 
 import StyleFlat from '../styles/StyleFlat';
+import StyleDetalhesProdutos from '../styles/StyleDetalhesProdutos';
 
-export default function GaleriaZoom({ images, percent }) {
+export default function GaleriaZoom({ images, percent, isFavorite, changeFavoriteDetails }) {
     const [index, setIndex] = useState(0);
     const scale = useSharedValue(1);
     const [loading, setLoading] = useState(true);
@@ -79,6 +81,15 @@ export default function GaleriaZoom({ images, percent }) {
             <View style={StyleFlat.ctpercent}>
                 <Text style={StyleFlat.txtpercent}>-{percent}%</Text>
             </View>
+            {isFavorite ? (
+                <TouchableOpacity style={StyleDetalhesProdutos.ctfavorito} onPress={() => changeFavoriteDetails()}>
+                    <Icon name="cards-heart" size={36} color={colors.primary} />
+                </TouchableOpacity>
+            ) : (
+                <TouchableOpacity style={StyleDetalhesProdutos.ctfavorito} onPress={() => changeFavoriteDetails()}>
+                    <Icon name="heart-outline" size={36} color={colors.tertiary} />
+                </TouchableOpacity>
+            )}
         </View>
 
     );

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import StackHome from "../stacks/StackHome";
 import StackDepartamentos from "../stacks/StackDepartamentos";
-import StackProdutos from "../stacks/StackProdutos";
+import StackFavoritos from "../stacks/StackFavoritos";
 import StackClientes from "../stacks/StackClients";
 
 const Tab = createBottomTabNavigator();
@@ -21,7 +21,7 @@ export default function MainTabs() {
                 }}
             />
             <Tab.Screen
-                name="departamentos"
+                name="produtos"
                 component={StackDepartamentos}
                 options={{
                     title: "Departamentos",
@@ -30,12 +30,12 @@ export default function MainTabs() {
                 }}
             />
             <Tab.Screen
-                name="produtos"
-                component={StackProdutos}
+                name="favoritos"
+                component={StackFavoritos}
                 options={{
-                    title: "Produtos",
+                    title: "Favoritos",
                     headerShown: false,
-                    tabBarIcon: ({ color }) => <Icon name="store" color={color} size={28} />
+                    tabBarIcon: ({ color }) => <Icon name="cards-heart" color={color} size={28} />
                 }}
             />
             <Tab.Screen

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, useWindowDimensions, ActivityIn
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RenderHtml from "react-native-render-html";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import api from "../../api/api";
 import colors from "../../theme/colors";
@@ -12,8 +13,11 @@ import stylebreadcrumb from '../../styles/StyleBreadcrumb';
 
 import GaleriaZoom from "../../components/CarrousselDetalhes";
 import StyleDetalhesProdutos from "../../styles/StyleDetalhesProdutos";
+
 import ElementFlatList from "../../components/ElementsFlatList";
 import SeparatorFlatList from "../../components/SeparatorFlatList";
+import LoaderFavoritos from "../../components/LoaderFavoritos";
+import SnackBarFavoritos from "../../components/SnackBarFavoritos";
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -21,9 +25,14 @@ export default ScreenDetalhes = ({ route }) => {
     const navigation = useNavigation();
     const { productid, categoriaid, subcategoriaid, namecategoria, namesubcategoria } = route.params;
     const [produto, setProduto] = useState([]);
+    const [favoritos, setFavoritos] = useState([]);
     const [images, setImages] = useState([]);
     const [related, setRelated] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingFavoritos, setLoadingFavoritos] = useState(false);
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [isFavorite, setIsFavorite] = useState(false);
 
     const { width } = useWindowDimensions();
     const widthdetalhes = width - 40;
@@ -31,13 +40,29 @@ export default ScreenDetalhes = ({ route }) => {
     async function getDetalhes() {
         try {
             setLoading(true);
-            const req = await api.get(`/produtos/detalhes/`, { params: { productid: productid, categoriaid: categoriaid } });
-            var { status, dados, images, rel } = req.data;
+            const getidclient = await AsyncStorage.getItem("clienteid");
+            const clienteid = getidclient == null || getidclient == undefined ? 0 : getidclient;
+            const req = await api.get(`/produtos/detalhes/`, {
+                params: {
+                    productid: productid,
+                    categoriaid: categoriaid,
+                    clienteid: clienteid
+                }
+            });
+            var { status, dados, images, rel, dafavoritos } = req.data;
+            if (!status) {
+                setMessage(message);
+                setSnackbarMessage(`${message}.`);
+                setSnackbarVisible(true);
+                return false;
+            }
             setLoading(false);
             setImages(images);
             setProduto(dados);
             setRelated(rel);
-
+            setFavoritos(dafavoritos);
+            let checkIsFavorite = (dafavoritos || []).some((subArray) => subArray.includes(productid)) ? true : false;
+            setIsFavorite(checkIsFavorite);
         } catch (error) {
             console.log(error);
         } finally {
@@ -59,13 +84,54 @@ export default ScreenDetalhes = ({ route }) => {
         );
     }
 
+    const changeSnackbar = () => {
+        setSnackbarVisible(!snackbarVisible);
+    }
+
+    const changeFavoriteDetails = async () => {
+        try {
+            setLoadingFavoritos(true);
+            var statusloged = await AsyncStorage.getItem("statuslogin");
+            if (statusloged === "false" || statusloged === null) {
+                navigation.navigate("clientes", { screen: "clienteslogin" });
+                return false;
+            }
+            const getidclient = await AsyncStorage.getItem("clienteid");
+            const clienteid = getidclient == null || getidclient == undefined ? 0 : getidclient;
+            var email = await AsyncStorage.getItem("email");
+            var senha = await AsyncStorage.getItem("senha");
+            var dados = {
+                clienteid: clienteid,
+                produtoid: productid,
+                status: isFavorite,
+                updateproduct: false,
+                email: email,
+                senha: senha
+            }
+            var req = await api.post('/favoritos/change', { dados: dados });
+            const { status, msg } = req.data;
+            if (!status) {
+                setSnackbarVisible(true);
+                setSnackbarMessage(`${msg}.`);
+                return false;
+            }
+            setIsFavorite(!isFavorite);
+            setLoadingFavoritos(false);
+            setSnackbarVisible(true);
+            setSnackbarMessage(`${msg}.`);
+            return true;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const elementHeaderDetalhes = () => {
         return (
             <>
                 <View style={StyleDetalhesProdutos.cttitle}>
                     <Text style={StyleDetalhesProdutos.titleproduct}>{produto.nome}</Text>
                 </View>
-                <GaleriaZoom images={images} percent={valorpercent} />
+                <GaleriaZoom images={images} percent={valorpercent} isFavorite={isFavorite} changeFavoriteDetails={changeFavoriteDetails} />
                 {exibirpreco ? (
                     <View style={StyleDetalhesProdutos.containerprice}>
                         <View style={StyleDetalhesProdutos.ctprice}>
@@ -211,11 +277,24 @@ export default ScreenDetalhes = ({ route }) => {
                         data={related}
                         contentContainerStyle={{ padding: 2 }}
                         ListHeaderComponent={elementHeaderDetalhes}
-                        renderItem={({ item }) => (<ElementFlatList item={item} navigation={navigation} />)}
+                        renderItem={({ item }) => (
+                            <ElementFlatList
+                                item={item} navigation={navigation}
+                                favoritos={favoritos}
+                                setFavoritos={setFavoritos}
+                                setLoadingFavoritos={setLoadingFavoritos}
+                                setSnackbarVisible={setSnackbarVisible}
+                                setSnackbarMessage={setSnackbarMessage}
+                                setProdutos={setRelated}
+                                updateProducts={false}
+                            />
+                        )}
                         keyExtractor={(item) => item.produtoid.toString()}
                         ItemSeparatorComponent={SeparatorFlatList}
                     />
                 )}
+                {loadingFavoritos ? (<LoaderFavoritos />) : null}
+                <SnackBarFavoritos visible={snackbarVisible} message={snackbarMessage} changeSnackbar={changeSnackbar} />
             </View>
         </View>
     );

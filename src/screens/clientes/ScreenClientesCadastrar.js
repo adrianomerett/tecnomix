@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -56,7 +56,7 @@ const ScreenClientesCadastrar = () => {
             await AsyncStorage.setItem("nome", String(nome));
             await AsyncStorage.setItem("email", String(email));
             Alert.alert("Sucesso", msg, [
-                { text: 'Ok', onPress: () => navigation.replace("clientesperfil") }
+                { text: 'Ok', onPress: () => navigation.navigate("clientesperfil") }
             ]);
         } catch (erro) {
             setLoading(false);

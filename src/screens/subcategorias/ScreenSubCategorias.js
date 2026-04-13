@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
 import { RefreshControl } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import api from "../../api/api";
 import cst from "../../../constants";
@@ -12,6 +13,8 @@ import stylebreadcrumb from '../../styles/StyleBreadcrumb';
 import ElementFlatList from "../../components/ElementsFlatList";
 import SeparatorFlatList from "../../components/SeparatorFlatList";
 import LoaderFlatList from "../../components/LoaderFlatList";
+import LoaderFavoritos from "../../components/LoaderFavoritos";
+import SnackBarFavoritos from "../../components/SnackBarFavoritos";
 import EmptyList from "../../components/EmptyList";
 import FooterFlatList from "../../components/FooterFlatList";
 import colors from "../../theme/colors";
@@ -20,12 +23,16 @@ const ScreenSubCategorias = ({ route }) => {
     const navigation = useNavigation();
     const { namecate, idcate, namesubcate, idsubcate } = route.params;
     const [produtos, setProdutos] = useState([]);
+    const [favoritos, setFavoritos] = useState([]);
     const [paginaatual, setPaginaatual] = useState(1);
     const [totalpages, setTotalpages] = useState(0);
     const [loading, setloading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [loadingFavoritos, setLoadingFavoritos] = useState(false);
     const [refreshing, setrefreshing] = useState(false);
     const [message, setMessage] = useState('Nenhum resultado encontrado...');
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     async function getProducts(page) {
         try {
@@ -34,14 +41,17 @@ const ScreenSubCategorias = ({ route }) => {
             } else {
                 setLoadingMore(true);
             }
+            const getidclient = await AsyncStorage.getItem("clienteid");
+            const clienteid = getidclient == null || getidclient == undefined ? 0 : getidclient;
             var req = await api.get('/subcategorias/listar/', {
                 params: {
                     subcategoriaid: idsubcate,
                     pagina_atual: page,
-                    por_pagina: cst.PAGINATION
+                    por_pagina: cst.PAGINATION,
+                    clienteid: clienteid
                 }
             });
-            var { status, dados, message, paginacao } = req.data;
+            var { status, dados, message, paginacao, dafavoritos } = req.data;
             if (!status) {
                 setMessage(message);
                 return;
@@ -53,6 +63,7 @@ const ScreenSubCategorias = ({ route }) => {
             } else {
                 setProdutos((prev) => [...prev, ...dados]);
             }
+            setFavoritos(dafavoritos);
             setloading(false);
         } catch (error) {
             setMessage(message);
@@ -64,9 +75,13 @@ const ScreenSubCategorias = ({ route }) => {
         }
     }
 
-    useEffect(() => {
-        getProducts(paginaatual);
-    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            getProducts(paginaatual);
+        }, [])
+    );
+
 
     const onRefresh = useCallback(() => {
         setrefreshing(true);
@@ -87,6 +102,10 @@ const ScreenSubCategorias = ({ route }) => {
         return <LoaderFlatList />;
     }
 
+    const changeSnackbar = () => {
+        setSnackbarVisible(!snackbarVisible);
+    }
+
     return (
         <View style={style.container}>
             <View style={stylebreadcrumb.breadcrumb}>
@@ -105,7 +124,18 @@ const ScreenSubCategorias = ({ route }) => {
                 <FlatList
                     data={produtos}
                     contentContainerStyle={{ padding: 2 }}
-                    renderItem={({ item }) => (<ElementFlatList item={item} navigation={navigation} />)}
+                    renderItem={({ item }) => (
+                        <ElementFlatList
+                            item={item} navigation={navigation}
+                            favoritos={favoritos}
+                            setFavoritos={setFavoritos}
+                            setLoadingFavoritos={setLoadingFavoritos}
+                            setSnackbarVisible={setSnackbarVisible}
+                            setSnackbarMessage={setSnackbarMessage}
+                            setProdutos={setProdutos}
+                            updateProducts={false}
+                        />
+                    )}
                     keyExtractor={(item) => item.produtoid.toString()}
                     ItemSeparatorComponent={SeparatorFlatList}
                     onEndReached={loadPages}
@@ -120,6 +150,8 @@ const ScreenSubCategorias = ({ route }) => {
                     }
                     ListFooterComponent={<FooterFlatList loadingMore={loadingMore} paginaatual={paginaatual} totalpages={totalpages} produtos={produtos} />}
                 />
+                {loadingFavoritos ? (<LoaderFavoritos />) : null}
+                <SnackBarFavoritos visible={snackbarVisible} message={snackbarMessage} changeSnackbar={changeSnackbar} />
             </View>
         </View>
     );

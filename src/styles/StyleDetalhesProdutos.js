@@ -75,6 +75,19 @@ export default StyleDetalhesProdutos = StyleSheet.create({
         color: colors.colorprice,
         fontWeight: 'bold'
     },
+    ctfavorito: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingLeft: 10,
+        paddingBottom: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        justifyContent: 'center',
+        zIndex: 100
+    },
     ctbuttom: {
         width: '100%',
         flexDirection: 'row',

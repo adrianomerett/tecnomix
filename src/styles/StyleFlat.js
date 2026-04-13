@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import colors from '../theme/colors';
+import { red } from 'react-native-reanimated/lib/typescript/Colors';
 
 export default StyleSheet.create({
     container: {
@@ -86,6 +87,20 @@ export default StyleSheet.create({
         fontWeight: 'bold',
         zIndex: 5,
     },
+    ctfavorito: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        marginTop: 10,
+        marginRight: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        justifyContent: 'center',
+    },
+    txtfavorito: {
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
     separator:{
         height: 20,
         alignContent: 'center',
@@ -131,5 +146,26 @@ export default StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: colors.graynavigation,
+    },
+    loaderfavorit:{
+        flex: 1,
+        height: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: "rgba(0,0,0,0.4)",
+        zIndex: 10,
+        borderRadius: 4,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    ctactiviindicator:{
+        width: 40,
+        height: 40,
+        backgroundColor: colors.white,
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });

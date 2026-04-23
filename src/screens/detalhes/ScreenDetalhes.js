@@ -51,11 +51,14 @@ export default ScreenDetalhes = ({ route }) => {
             });
             var { status, dados, images, rel, dafavoritos } = req.data;
             if (!status) {
+                setLoading(false);
                 setMessage(message);
                 setSnackbarMessage(`${message}.`);
                 setSnackbarVisible(true);
                 return false;
             }
+            // Seta os itens vistos recentemente
+            await setRecentes(dados);
             setLoading(false);
             setImages(images);
             setProduto(dados);
@@ -67,6 +70,45 @@ export default ScreenDetalhes = ({ route }) => {
             console.log(error);
         } finally {
             setLoading(false);
+        }
+    }
+
+    // Setar Produtos vistos recentemente
+    const setRecentes = async (dados) => {
+        try {
+            //await AsyncStorage.removeItem("recentes");
+            const recentes = await AsyncStorage.getItem("recentes");
+            let itemrecent = {
+                productid: dados.produtoid,
+                categoriaid: categoriaid,
+                subcategoriaid: subcategoriaid,
+                namecategoria: namecategoria,
+                namesubcategoria: namesubcategoria,
+                name: dados.nome,
+                valoroferta: dados.valoroferta,
+                exibirpreco: dados.exibirpreco,
+                img: dados.img
+            }
+            if (recentes == null || recentes == undefined) {
+                let item = []
+                item.push(itemrecent);
+                await AsyncStorage.setItem("recentes", JSON.stringify(item));
+            } else {
+                let item = JSON.parse(recentes);
+                for (let i = 0; i < item.length; i++) {
+                    if (item[i].productid === dados.produtoid) {
+                        return false;
+                    }
+                }
+                if (item.length >= 10) {
+                    item.pop();
+                }
+                let newitem = [itemrecent, ...item];
+                await AsyncStorage.setItem("recentes", JSON.stringify(newitem));
+            }
+            return true;
+        } catch (error) {
+            console.log(error);
         }
     }
 

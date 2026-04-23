@@ -5,12 +5,22 @@ import StackHome from "../stacks/StackHome";
 import StackDepartamentos from "../stacks/StackDepartamentos";
 import StackFavoritos from "../stacks/StackFavoritos";
 import StackClientes from "../stacks/StackClients";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabs() {
+    const navigation = useNavigation();
     return (
-        <Tab.Navigator initialRouteName="home">
+        <Tab.Navigator initialRouteName="home"
+        screenOptions={{
+            tabBarStyle: {
+                height: 70,
+                paddingTop: 5
+            },
+            tabBarActiveTintColor: colors.primary
+        }}
+        >
             <Tab.Screen
                 name="home"
                 component={StackHome}
@@ -28,6 +38,14 @@ export default function MainTabs() {
                     headerShown: false,
                     tabBarIcon: ({ color }) => <Icon name="layers" color={color} size={28} />
                 }}
+                listeners={({ navigation }) => ({
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        navigation.navigate("produtos", {
+                            screen: "departamentos"
+                        });
+                    }
+                })}
             />
             <Tab.Screen
                 name="favoritos"

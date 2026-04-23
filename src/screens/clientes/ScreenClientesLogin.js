@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import React, { useState, useCallback, useRef } from "react";
+import { View, ScrollView, Text, TouchableOpacity, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput, Checkbox, Button } from 'react-native-paper';
@@ -161,97 +161,99 @@ const ScreenClintesPerfil = ({ setLogged }) => {
                 <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
                 <Text style={StyleBreadcrumb.inactivenavigation}> Login </Text>
             </View>
-            <ScrollView style={styles.containercadastro}>
-                <View style={styles.cttitlelogin}>
-                    <Text style={styles.txttitle}>Acesse sua conta ou cadastre-se</Text>
-                </View>
-                <View style={styles.containericon}>
-                    <View style={styles.circleicon}>
-                        <View style={styles.fundoicon}>
-                            <Icon name="account-lock" size={60} color={color.white} />
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+                <ScrollView style={styles.containercadastro}>
+                    <View style={styles.cttitlelogin}>
+                        <Text style={styles.txttitle}>Acesse sua conta ou cadastre-se</Text>
+                    </View>
+                    <View style={styles.containericon}>
+                        <View style={styles.circleicon}>
+                            <View style={styles.fundoicon}>
+                                <Icon name="account-lock" size={60} color={color.white} />
+                            </View>
                         </View>
                     </View>
-                </View>
-                <View>
-                    <TextInput
-                        label="E-mail"
-                        mode="outlined"
-                        ref={inputEmail}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        value={email}
-                        onChangeText={text => setEmail(text)}
-                        style={styles.input}
-                        textColor={color.primary}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                        error={!!errorEmail}
-                    />
-                    <TextInput
-                        label="Senha"
-                        mode="outlined"
-                        ref={inputSenha}
-                        autoCapitalize="none"
-                        secureTextEntry={!showPassword}
-                        value={senha}
-                        onChangeText={text => setSenha(text)}
-                        style={styles.input}
-                        textColor={color.primary}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                        right={
-                            <TextInput.Icon
-                                icon={showPassword ? 'eye' : 'eye-off'}
-                                onPress={() => setShowPassword(!showPassword)}
-                                color={color.primary}
-                            />
-                        }
-                        error={!!errorSenha}
-                    />
-                    <View style={styles.ctcheckbox}>
-                        <Checkbox
-                            status={remember ? 'checked' : 'unchecked'}
-                            onPress={() => changeRemember()}
-                            theme={{ colors: { primary: color.primary } }}
+                    <View>
+                        <TextInput
+                            label="E-mail"
+                            mode="outlined"
+                            ref={inputEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            value={email}
+                            onChangeText={text => setEmail(text)}
+                            style={styles.input}
+                            textColor={color.primary}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                            error={!!errorEmail}
                         />
-                        <TouchableOpacity onPress={() => {
-                            changeRemember();
-                        }}>
-                            <Text style={styles.txtcheckbox}>Salvar acesso para o próximo login?</Text>
-                        </TouchableOpacity>
+                        <TextInput
+                            label="Senha"
+                            mode="outlined"
+                            ref={inputSenha}
+                            autoCapitalize="none"
+                            secureTextEntry={!showPassword}
+                            value={senha}
+                            onChangeText={text => setSenha(text)}
+                            style={styles.input}
+                            textColor={color.primary}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                            right={
+                                <TextInput.Icon
+                                    icon={showPassword ? 'eye' : 'eye-off'}
+                                    onPress={() => setShowPassword(!showPassword)}
+                                    color={color.primary}
+                                />
+                            }
+                            error={!!errorSenha}
+                        />
+                        <View style={styles.ctcheckbox}>
+                            <Checkbox
+                                status={remember ? 'checked' : 'unchecked'}
+                                onPress={() => changeRemember()}
+                                theme={{ colors: { primary: color.primary } }}
+                            />
+                            <TouchableOpacity onPress={() => {
+                                changeRemember();
+                            }}>
+                                <Text style={styles.txtcheckbox}>Salvar acesso para o próximo login?</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Button
+                            mode="contained"
+                            style={{ marginTop: 10 }}
+                            onPress={() => login()}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                        >
+                            Login
+                        </Button>
+                        <Button
+                            mode="contained"
+                            style={{ marginTop: 10 }}
+                            onPress={() => navigation.navigate("clientescadastrar")}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                        >
+                            Cadastrar-se
+                        </Button>
                     </View>
-                    <Button
-                        mode="contained"
-                        style={{ marginTop: 10 }}
-                        onPress={() => login()}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        mode="contained"
-                        style={{ marginTop: 10 }}
-                        onPress={() => navigation.navigate("clientescadastrar")}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                    >
-                        Cadastrar-se
-                    </Button>
-                </View>
-            </ScrollView>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </View>
     )
 }

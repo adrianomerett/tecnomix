@@ -17,7 +17,7 @@ export default StyleDetalhesProdutos = StyleSheet.create({
     cttitle: {
         width: '100%',
         alignItems: 'flex-start',
-        paddingBottom: 4
+        paddingVertical: 10,
     },
     titleproduct: {
         fontSize: 14,

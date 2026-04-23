@@ -18,6 +18,7 @@ import SnackBarFavoritos from "../../components/SnackBarFavoritos";
 import EmptyList from "../../components/EmptyList";
 import FooterFlatList from "../../components/FooterFlatList";
 import colors from "../../theme/colors";
+import { screen } from "electron";
 
 const ScreenSubCategorias = ({ route }) => {
     const navigation = useNavigation();
@@ -111,11 +112,14 @@ const ScreenSubCategorias = ({ route }) => {
             <View style={stylebreadcrumb.breadcrumb}>
                 <TouchableOpacity onPress={() => navigation.navigate('home')}><Text style={stylebreadcrumb.activenavigation}>Início</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('departamentos')}><Text style={stylebreadcrumb.activenavigation}>Departamentos</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("produtos", { screen: "departamentos" })}><Text style={stylebreadcrumb.activenavigation}>Departamentos</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('categorias', {
-                    idcate: idcate,
-                    namecate: namecate
+                <TouchableOpacity onPress={() => navigation.navigate("produtos", {
+                    screen: "categorias",
+                    params: {
+                        idcate: idcate,
+                        namecate: namecate
+                    }
                 })}><Text style={stylebreadcrumb.activenavigation}>{namecate}</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
                 <Text style={stylebreadcrumb.inactivenavigation}> {namesubcate} </Text>

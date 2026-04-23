@@ -6,7 +6,7 @@ export default colors = Object.freeze({
     white: "#ffffff",
     gray: '#EEEEEE',
     grayborder: '#c2bfbf',
-    grayfundo: '#DDD9D9',
+    grayfundo: '#e7e5e5ff',
     graynavigation: '#818181',
 
     // Fonts

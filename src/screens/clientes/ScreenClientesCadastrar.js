@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from 'react-native-paper';
@@ -123,18 +123,15 @@ const ScreenClientesCadastrar = () => {
                     <Text style={StyleBreadcrumb.activenavigation}>Início</Text>
                 </TouchableOpacity>
                 <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
-                <TouchableOpacity onPress={() => navigation.navigate("clientesperfil")}>
-                    <Text style={StyleBreadcrumb.activenavigation}> Minha conta </Text>
-                </TouchableOpacity>
-                <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
                 <Text style={StyleBreadcrumb.inactivenavigation}> Cadastrar </Text>
             </View>
-            <View style={styles.containercadastro}>
-                <View style={styles.containericon}>
-                    <View style={styles.circleicon}>
-                        <View style={styles.fundoicon}>
-                            <Icon name="account-plus" size={60} color={color.white} />
-                        </View>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+                <ScrollView style={styles.containercadastro}>
+                    <View style={styles.containericon}>
+                        <View style={styles.circleicon}>
+                            <View style={styles.fundoicon}>
+                                <Icon name="account-plus" size={60} color={color.white} />
+                            </View>
                     </View>
                 </View>
                 <View>
@@ -235,7 +232,7 @@ const ScreenClientesCadastrar = () => {
                     </Button>
                     <Button
                         mode="contained"
-                        style={{ marginTop: 10 }}
+                        style={{ marginTop: 10, marginBottom: 20 }}
                         onPress={() => navigation.navigate('clienteslogin')}
                         theme={{
                             colors: {
@@ -246,7 +243,8 @@ const ScreenClientesCadastrar = () => {
                         Já tem uma conta? Entre aqui.
                     </Button>
                 </View>
-            </View>
+            </ScrollView>
+            </KeyboardAvoidingView>
         </View>
     )
 }

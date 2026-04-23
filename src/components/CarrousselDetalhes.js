@@ -101,15 +101,15 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     pager: {
-        height: 320
+        height: 360
     },
     slide: {
-        height: 320,
+        height: 360,
         justifyContent: "center",
         alignItems: "center"
     },
     image: {
-        height: 320
+        height: 360
     },
     counter: {
         position: "absolute",

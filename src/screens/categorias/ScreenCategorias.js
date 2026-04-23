@@ -19,6 +19,7 @@ import EmptyList from "../../components/EmptyList";
 import FooterFlatList from "../../components/FooterFlatList";
 import colors from "../../theme/colors";
 
+
 const ScreenCategorias = ({ route }) => {
     const navigation = useNavigation();
     const { idcate, namecate } = route.params;
@@ -77,8 +78,9 @@ const ScreenCategorias = ({ route }) => {
 
     useFocusEffect(
         useCallback(() => {
+            console.log(idcate);
             getProducts(paginaatual);
-        }, [])
+        }, [idcate])
     );
 
     const onRefresh = useCallback(() => {
@@ -86,7 +88,7 @@ const ScreenCategorias = ({ route }) => {
         setPaginaatual(1);
         getProducts(1);
         setrefreshing(false);
-    }, []);
+    }, [idcate]);
 
     const loadPages = () => {
         if (loadingMore) return;
@@ -109,7 +111,7 @@ const ScreenCategorias = ({ route }) => {
             <View style={stylebreadcrumb.breadcrumb}>
                 <TouchableOpacity onPress={() => navigation.navigate('home')}><Text style={stylebreadcrumb.activenavigation}>Início</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('departamentos')}><Text style={stylebreadcrumb.activenavigation}>Departamentos</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("produtos", { screen: "departamentos" })}><Text style={stylebreadcrumb.activenavigation}>Departamentos</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
                 <Text style={stylebreadcrumb.inactivenavigation}> {namecate} </Text>
             </View>

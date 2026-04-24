@@ -1,11 +1,12 @@
 import React, { useState, useRef } from "react";
-import { View, ScrollView, Text, TouchableOpacity, Alert, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Alert, ActivityIndicator, Keyboard } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { TextInput, Button } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/StyeleCadastrarClientes";
 import StyleBreadcrumb from "../../styles/StyleBreadcrumb";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { validaemail } from "../../helpers/validacoes";
 
@@ -45,7 +46,6 @@ const ScreenClientesCadastrar = () => {
             }
             const req = await api.post('/clientes/cadastrar', { dados: dados });
             setLoading(false);
-            console.log(req.data);
             const { status, msg, clienteid } = req.data;
             if (!status) {
                 ShowAlert('Erro', msg);
@@ -125,126 +125,130 @@ const ScreenClientesCadastrar = () => {
                 <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
                 <Text style={StyleBreadcrumb.inactivenavigation}> Cadastrar </Text>
             </View>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-                <ScrollView style={styles.containercadastro}>
+            <KeyboardAwareScrollView style={styles.containercadastro}
+                enableOnAndroid={true}
+                extraScrollHeight={20}
+                keyboardShouldPersistTaps="handled">
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+
                     <View style={styles.containericon}>
                         <View style={styles.circleicon}>
                             <View style={styles.fundoicon}>
                                 <Icon name="account-plus" size={60} color={color.white} />
                             </View>
+                        </View>
                     </View>
-                </View>
-                <View>
-                    <TextInput
-                        label="Nome completo"
-                        mode="outlined"
-                        ref={inputNome}
-                        autoCapitalize="words"
-                        value={nome}
-                        onChangeText={text => setNome(text)}
-                        style={styles.input}
-                        textColor={color.primary}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                        error={!!errorNome}
-                    />
+                    <View>
+                        <TextInput
+                            label="Nome completo"
+                            mode="outlined"
+                            ref={inputNome}
+                            autoCapitalize="words"
+                            value={nome}
+                            onChangeText={text => setNome(text)}
+                            style={styles.input}
+                            textColor={color.primary}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                            error={!!errorNome}
+                        />
 
-                    <TextInput
-                        label="E-mail"
-                        mode="outlined"
-                        ref={inputEmail}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        value={email}
-                        onChangeText={text => setEmail(text)}
-                        style={styles.input}
-                        textColor={color.primary}
-                        theme={{
-                            colors: {
-                                primary: color.primary
+                        <TextInput
+                            label="E-mail"
+                            mode="outlined"
+                            ref={inputEmail}
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            value={email}
+                            onChangeText={text => setEmail(text)}
+                            style={styles.input}
+                            textColor={color.primary}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                            error={!!errorEmail}
+                        />
+                        <TextInput
+                            label="Senha"
+                            mode="outlined"
+                            ref={inputSenha}
+                            autoCapitalize="none"
+                            secureTextEntry={!showPassword}
+                            value={senha}
+                            onChangeText={text => setSenha(text)}
+                            style={styles.input}
+                            textColor={color.primary}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                            right={
+                                <TextInput.Icon
+                                    icon={showPassword ? 'eye' : 'eye-off'}
+                                    onPress={() => setShowPassword(!showPassword)}
+                                    color={color.primary}
+                                />
                             }
-                        }}
-                        error={!!errorEmail}
-                    />
-                    <TextInput
-                        label="Senha"
-                        mode="outlined"
-                        ref={inputSenha}
-                        autoCapitalize="none"
-                        secureTextEntry={!showPassword}
-                        value={senha}
-                        onChangeText={text => setSenha(text)}
-                        style={styles.input}
-                        textColor={color.primary}
-                        theme={{
-                            colors: {
-                                primary: color.primary
+                            error={!!errorSenha}
+                        />
+                        <TextInput
+                            label="Confirmar senha"
+                            mode="outlined"
+                            ref={inputConfirmarSenha}
+                            autoCapitalize="none"
+                            secureTextEntry={!showPasswordConfirmar}
+                            value={confirmarsenha}
+                            onChangeText={text => setConfirmarsenha(text)}
+                            style={styles.input}
+                            textColor={color.primary}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                            right={
+                                <TextInput.Icon
+                                    icon={showPasswordConfirmar ? 'eye' : 'eye-off'}
+                                    onPress={() => setShowPasswordConfirmar(!showPasswordConfirmar)}
+                                    color={color.primary}
+                                />
                             }
-                        }}
-                        right={
-                            <TextInput.Icon
-                                icon={showPassword ? 'eye' : 'eye-off'}
-                                onPress={() => setShowPassword(!showPassword)}
-                                color={color.primary}
-                            />
-                        }
-                        error={!!errorSenha}
-                    />
-                    <TextInput
-                        label="Confirmar senha"
-                        mode="outlined"
-                        ref={inputConfirmarSenha}
-                        autoCapitalize="none"
-                        secureTextEntry={!showPasswordConfirmar}
-                        value={confirmarsenha}
-                        onChangeText={text => setConfirmarsenha(text)}
-                        style={styles.input}
-                        textColor={color.primary}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                        right={
-                            <TextInput.Icon
-                                icon={showPasswordConfirmar ? 'eye' : 'eye-off'}
-                                onPress={() => setShowPasswordConfirmar(!showPasswordConfirmar)}
-                                color={color.primary}
-                            />
-                        }
-                        error={!!errorConfirmarSenha}
-                    />
-                    <Button
-                        mode="contained"
+                            error={!!errorConfirmarSenha}
+                        />
+                        <Button
+                            mode="contained"
 
-                        style={{ marginTop: 10 }}
-                        onPress={() => salvarCliente()}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                    >
-                        Cadastrar
-                    </Button>
-                    <Button
-                        mode="contained"
-                        style={{ marginTop: 10, marginBottom: 20 }}
-                        onPress={() => navigation.navigate('clienteslogin')}
-                        theme={{
-                            colors: {
-                                primary: color.primary
-                            }
-                        }}
-                    >
-                        Já tem uma conta? Entre aqui.
-                    </Button>
-                </View>
-            </ScrollView>
-            </KeyboardAvoidingView>
+                            style={{ marginTop: 10 }}
+                            onPress={() => salvarCliente()}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                        >
+                            Cadastrar
+                        </Button>
+                        <Button
+                            mode="contained"
+                            style={{ marginTop: 10, marginBottom: 20 }}
+                            onPress={() => navigation.navigate('clienteslogin')}
+                            theme={{
+                                colors: {
+                                    primary: color.primary
+                                }
+                            }}
+                        >
+                            Já tem uma conta? Entre aqui.
+                        </Button>
+                    </View>
+                </ScrollView>
+            </KeyboardAwareScrollView>
         </View>
     )
 }

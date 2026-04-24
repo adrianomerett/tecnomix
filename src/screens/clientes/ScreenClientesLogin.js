@@ -4,6 +4,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextInput, Checkbox, Button } from 'react-native-paper';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import styles from "../../styles/StyleClienteLogin";
 import StyleBreadcrumb from "../../styles/StyleBreadcrumb";
@@ -161,8 +162,7 @@ const ScreenClintesPerfil = ({ setLogged }) => {
                 <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
                 <Text style={StyleBreadcrumb.inactivenavigation}> Login </Text>
             </View>
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-                <ScrollView style={styles.containercadastro}>
+            <KeyboardAwareScrollView style={styles.containercadastro}>
                     <View style={styles.cttitlelogin}>
                         <Text style={styles.txttitle}>Acesse sua conta ou cadastre-se</Text>
                     </View>
@@ -252,8 +252,7 @@ const ScreenClintesPerfil = ({ setLogged }) => {
                             Cadastrar-se
                         </Button>
                     </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         </View>
     )
 }

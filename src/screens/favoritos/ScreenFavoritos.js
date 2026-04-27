@@ -33,8 +33,8 @@ export default ScreenFavoritos = () => {
         try {
             setloading(true);
             const clientid = await AsyncStorage.getItem('clienteid');
-            const email = await AsyncStorage.getItem('email');
-            const senha = await AsyncStorage.getItem('senha');
+            const email = await AsyncStorage.getItem('emailfavoritos');
+            const senha = await AsyncStorage.getItem('senhafavoritos');
             const req = await api.get('/produtos/favoritos/', { params: { clientid: clientid, email: email, senha: senha } });
             const { status, dados, message, dafavoritos } = req.data;
             setloading(false);

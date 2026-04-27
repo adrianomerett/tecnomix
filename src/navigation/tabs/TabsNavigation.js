@@ -15,8 +15,8 @@ export default function MainTabs() {
         <Tab.Navigator initialRouteName="home"
         screenOptions={{
             tabBarStyle: {
-                height: 70,
-                paddingTop: 5
+                height: 60,
+                paddingTop: 5,
             },
             tabBarActiveTintColor: colors.primary
         }}

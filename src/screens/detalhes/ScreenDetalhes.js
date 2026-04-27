@@ -140,8 +140,8 @@ export default ScreenDetalhes = ({ route }) => {
             }
             const getidclient = await AsyncStorage.getItem("clienteid");
             const clienteid = getidclient == null || getidclient == undefined ? 0 : getidclient;
-            var email = await AsyncStorage.getItem("email");
-            var senha = await AsyncStorage.getItem("senha");
+            var email = await AsyncStorage.getItem("emailfavoritos");
+            var senha = await AsyncStorage.getItem("senhafavoritos");
             var dados = {
                 clienteid: clienteid,
                 produtoid: productid,

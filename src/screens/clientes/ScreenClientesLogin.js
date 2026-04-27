@@ -47,6 +47,8 @@ const ScreenClintesPerfil = ({ setLogged }) => {
             await AsyncStorage.setItem("clienteid", String(data.clienteid));
             await AsyncStorage.setItem("nome", String(data.nome));
             await AsyncStorage.setItem("email", String(data.email));
+            await AsyncStorage.setItem("emailfavoritos", String(data.email));
+            await AsyncStorage.setItem("senhafavoritos", String(senha));
             setLogged(true);
         } catch (e) {
             setLoading(false);
@@ -162,7 +164,12 @@ const ScreenClintesPerfil = ({ setLogged }) => {
                 <Text style={StyleBreadcrumb.inactivenavigation}> » </Text>
                 <Text style={StyleBreadcrumb.inactivenavigation}> Login </Text>
             </View>
-            <KeyboardAwareScrollView style={styles.containercadastro}>
+            <KeyboardAwareScrollView style={styles.containercadastro}
+                enableOnAndroid={true}
+                extraScrollHeight={20}
+                keyboardShouldPersistTaps="handled"
+            >
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
                     <View style={styles.cttitlelogin}>
                         <Text style={styles.txttitle}>Acesse sua conta ou cadastre-se</Text>
                     </View>
@@ -241,7 +248,7 @@ const ScreenClintesPerfil = ({ setLogged }) => {
                         </Button>
                         <Button
                             mode="contained"
-                            style={{ marginTop: 10 }}
+                            style={{ marginTop: 10, marginBottom: 20 }}
                             onPress={() => navigation.navigate("clientescadastrar")}
                             theme={{
                                 colors: {
@@ -252,6 +259,7 @@ const ScreenClintesPerfil = ({ setLogged }) => {
                             Cadastrar-se
                         </Button>
                     </View>
+                </ScrollView>
             </KeyboardAwareScrollView>
         </View>
     )

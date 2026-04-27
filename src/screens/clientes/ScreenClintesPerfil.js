@@ -44,6 +44,8 @@ const ScreenClintesPerfil = ({ setLogged, logged }) => {
                     onPress: async () => {
                         await AsyncStorage.setItem("statuslogin", "false");
                         await AsyncStorage.removeItem("clienteid");
+                        await AsyncStorage.removeItem("emailfavoritos");
+                        await AsyncStorage.removeItem("senhafavoritos");
                         setLogged(false);
                     },
                     style: "destructive"

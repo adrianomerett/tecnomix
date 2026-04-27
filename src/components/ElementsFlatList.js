@@ -36,8 +36,8 @@ export default ElementFlatList = ({
             return false;
         }
         var clientid = await AsyncStorage.getItem("clienteid");
-        var email = await AsyncStorage.getItem("email");
-        var senha = await AsyncStorage.getItem("senha");
+        var email = await AsyncStorage.getItem("emailfavoritos");
+        var senha = await AsyncStorage.getItem("senhafavoritos");
         var dados = {
             clienteid: clientid,
             produtoid: id,

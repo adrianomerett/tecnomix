@@ -18,4 +18,7 @@ export default colors = Object.freeze({
     coloredit: "#F1891AFF",
     colordelete: "#D72222FF",
     colornowfavorict: "rgb(236, 162, 162)",
+    // Snackbar
+    success: "#388e3c",
+    error: "#d32f2f"
 });

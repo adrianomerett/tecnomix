@@ -292,10 +292,6 @@ export default ScreenDetalhes = ({ route }) => {
     return (
         <View style={style.container}>
             <View style={stylebreadcrumb.breadcrumb}>
-                <TouchableOpacity onPress={() => navigation.navigate('home')}>
-                    <Text style={stylebreadcrumb.activenavigation}>Início</Text>
-                </TouchableOpacity>
-                <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('categorias', { idcate: categoriaid, namecate: namecategoria })}>
                     <Text style={stylebreadcrumb.activenavigation}>{namecategoria}</Text>
                 </TouchableOpacity>

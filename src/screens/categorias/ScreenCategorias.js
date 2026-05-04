@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from "react-native-gesture-handler";
@@ -78,7 +78,6 @@ const ScreenCategorias = ({ route }) => {
 
     useFocusEffect(
         useCallback(() => {
-            console.log(idcate);
             getProducts(paginaatual);
         }, [idcate])
     );

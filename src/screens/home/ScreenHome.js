@@ -17,10 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 import api from "../../api/api";
-import cst from "../../../constants"
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+import cst from "../../../constants";
 
 const { width } = Dimensions.get("window");
 
@@ -31,7 +28,7 @@ const ScreenHome = () => {
   const [news, setNews] = useState([]);
   const [recents, setRecents] = useState([]);
   const [desconto, setDesconto] = useState([]);
-  const [categorias, setCategorias] = useState([]);
+  const [categorias, setCategorias] = useState({});
   const [yourlike, setYourLike] = useState([]);
   const [config, setConfig] = useState([]);
   const [index, setIndex] = useState(0);
@@ -42,20 +39,21 @@ const ScreenHome = () => {
   const slideWidth = width - 32;
   const widthDesconto = (width - 24) / 2;
 
-
-
   // Buscar os produtos para página home 
   const getProducts = async () => {
     try {
       setLoading(true);
+      let configlocal = await AsyncStorage.getItem("config");
+      let cfg = JSON.parse(configlocal);
+      let categoriaslocal = await AsyncStorage.getItem("categorias");
+      let categoriasdata = JSON.parse(categoriaslocal);
+      setConfig(cfg || {});
+      setCategorias(categoriasdata || {});
       const req = await api.get("/produtos/recentes");
       setLoading(false);
-      var { status, news, desconto, config, categorias, yourlike } = req.data;
-      console.log(config);
+      var { status, news, desconto, yourlike } = req.data;
       setDesconto(desconto)
       setNews(news);
-      setConfig(config);
-      setCategorias(categorias);
       setYourLike(yourlike);
     } catch (error) {
       setLoading(false);
@@ -113,7 +111,7 @@ const ScreenHome = () => {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
-          {loading || loadingImg && (loadingCarrousel())}
+          {(loading || loadingImg) && (loadingCarrousel())}
           <View style={StyleHome.cttitlerecentes}>
             <Icon name="newspaper" size={24} color={colors.colorfont} />
             <Text style={StyleHome.titlerecentes}>Produtos recém-chegados</Text>
@@ -187,22 +185,22 @@ const ScreenHome = () => {
                 <Text style={StyleHome.txttitleicons}>Departamentos</Text>
               </View>
             </TouchableOpacity>
-            {categorias.map((iten, index, array) => {
+            {Object.values(categorias).map((iten, index, array) => {
               return (
-                <TouchableOpacity activeOpacity={1} key={`categorias-${iten.categoriaid}`} onPress={() => navigation.navigate("produtos",
+                <TouchableOpacity activeOpacity={1} key={`categorias-${iten.id.categoriaid}`} onPress={() => navigation.navigate("produtos",
                   {
                     screen: "categorias",
                     params: {
-                      idcate: iten.categoriaid,
-                      namecate: iten.namecategoria
+                      idcate: iten.id.categoriaid,
+                      namecate: iten.id.namecategoria
 
                     }
                   })}>
                   <View style={StyleHome.boxicons}>
                     <View style={StyleHome.iconcate}>
-                      <Icon name={iten.iconcategoria} size={22} color={colors.primary} />
+                      <Icon name={iten.id.iconcategoria} size={22} color={colors.primary} />
                     </View>
-                    <Text style={StyleHome.txttitleicons}>{iten.namecategoria}</Text>
+                    <Text style={StyleHome.txttitleicons}>{iten.id.namecategoria}</Text>
                   </View>
                 </TouchableOpacity>
               )

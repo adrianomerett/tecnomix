@@ -1,21 +1,21 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
-import axios from 'axios';
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import style from '../../styles/StyleDepartamentos';
-import cst from '../../../constants';
+import colors from '../../theme/colors';
 
 const ScreenDepartamentos = () => {
     const navigation = useNavigation();
-    const [categorias, setCategorias] = useState([]);
+    const [categorias, setCategorias] = useState({});
     const [loading, setLoading] = useState(true);
 
     async function getDepartamentos() {
         try {
-            const req = await axios.get(`${cst.URL_API}/categorias/getcategorias`);
-            let dados = Object.values(req.data.dados);
-            setCategorias(dados || []);
+            const getcate = await AsyncStorage.getItem("categorias");
+            let dados = JSON.parse(getcate);
+            setCategorias(dados || {});
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -23,7 +23,7 @@ const ScreenDepartamentos = () => {
             setLoading(false);
         }
     }
-    
+
     useEffect(() => {
         setLoading(true);
         getDepartamentos();
@@ -39,7 +39,7 @@ const ScreenDepartamentos = () => {
                 {loading ? (
                     <ActivityIndicator size="large" color="#000" style={{ marginTop: 20 }} />
                 ) : (
-                    categorias.map((iten, indexCate, arrayCate) => {
+                    Object.values(categorias).map((iten, indexCate, arrayCate) => {
                         return (
                             <React.Fragment key={iten.id.categoriaid}>
                                 <View style={style.rowcat}>
@@ -48,6 +48,7 @@ const ScreenDepartamentos = () => {
                                         onPress={() => navigation.navigate('categorias',
                                             { idcate: iten.id.categoriaid, namecate: iten.id.namecategoria })
                                         }>
+                                        <Icon name={iten.id.iconcategoria} size={20} color={colors.primary} />
                                         <Text style={style.txtcat}>{iten.id.namecategoria}</Text>
                                     </TouchableOpacity>
                                 </View>

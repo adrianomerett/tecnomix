@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, TouchableOpacity, FlatList, useWindowDimensions, ActivityIndicator } from 'react-native';
+import React, { useState, useCallback } from "react";
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RefreshControl } from "react-native-gesture-handler";

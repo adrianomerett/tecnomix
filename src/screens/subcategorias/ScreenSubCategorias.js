@@ -110,8 +110,6 @@ const ScreenSubCategorias = ({ route }) => {
     return (
         <View style={style.container}>
             <View style={stylebreadcrumb.breadcrumb}>
-                <TouchableOpacity onPress={() => navigation.navigate('home')}><Text style={stylebreadcrumb.activenavigation}>Início</Text></TouchableOpacity>
-                <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
                 <TouchableOpacity onPress={() => navigation.navigate("produtos", { screen: "departamentos" })}><Text style={stylebreadcrumb.activenavigation}>Departamentos</Text></TouchableOpacity>
                 <Text style={stylebreadcrumb.inactivenavigation}> » </Text>
                 <TouchableOpacity onPress={() => navigation.navigate("produtos", {

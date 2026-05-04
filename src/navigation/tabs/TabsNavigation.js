@@ -1,14 +1,16 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import StackHome from "../stacks/StackHome";
 import StackDepartamentos from "../stacks/StackDepartamentos";
 import StackFavoritos from "../stacks/StackFavoritos";
 import StackClientes from "../stacks/StackClients";
+import StackEmpresa from "../stacks/StackEmpresa";
 import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
-
+const Drawer = createDrawerNavigator();
 export default function MainTabs() {
     const navigation = useNavigation();
     return (
@@ -44,6 +46,21 @@ export default function MainTabs() {
                         navigation.navigate("produtos", {
                             screen: "departamentos"
                         });
+                    }
+                })}
+            />
+            <Tab.Screen
+                name="menu"
+                component={StackEmpresa}
+                options={{
+                    title: "Menu",
+                    headerShown: false,
+                    tabBarIcon: ({ color }) => <Icon name="menu" color={color} size={28} />
+                }}
+                listeners={({ navigation }) => ({
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        navigation.openDrawer();
                     }
                 })}
             />

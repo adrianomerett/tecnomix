@@ -8,8 +8,6 @@ import ScreenClientesLogin from "../../screens/clientes/ScreenClientesLogin";
 import DefaultHeader from "../../components/DeaultHeader";
 import LoadingScreen from "../../components/LoadingScreen";
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 const Stack = createStackNavigator();
 
 export default function StackFavoritos() {

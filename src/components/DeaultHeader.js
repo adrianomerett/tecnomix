@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import  AsyncStorage  from "@react-native-async-storage/async-storage";
-import { DrawerActions, useNavigation, useRoute } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRoute } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import colors from "../theme/colors";
 
@@ -13,12 +13,11 @@ import styles from "../styles/StyleDefaltHeader";
 import api from "../api/api";
 
 export default function DefaultHeader() {
-    const navigation = useNavigation();
     const route = useRoute();
     const [nameloja, setNameloja] = useState("");
     const [slogan, setslogan] = useState("");
 
-    
+
     async function getConfig() {
         try {
             if (route.name === "home") {
@@ -28,10 +27,10 @@ export default function DefaultHeader() {
                 await AsyncStorage.setItem("slogan", dados.slogan);
                 setNameloja(dados.nameloja);
                 setslogan(dados.slogan);
-            }else{
+            } else {
                 const nameloja = await AsyncStorage.getItem("nameloja");
                 const slogan = await AsyncStorage.getItem("slogan");
-                setNameloja(nameloja);                
+                setNameloja(nameloja);
                 setslogan(slogan);
             }
         } catch (error) {
@@ -46,9 +45,6 @@ export default function DefaultHeader() {
     return (
         <View style={styles.header}>
             <View>
-                {/* <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())}>
-                    <Text style={styles.bars}><FontAwesome5 name="bars"  size={24} /></Text>
-                </TouchableOpacity> */}
             </View>
             <View style={styles.centerheaders}>
                 <View style={styles.ctnameloja}>

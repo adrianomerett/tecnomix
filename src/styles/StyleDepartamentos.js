@@ -25,7 +25,9 @@ export default StyleSheet.create({
     },
     tochablecate: {
         flex: 1,
-        justifyContent: 'center',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
         paddingBottom: 8,
         paddingLeft: 4,
         paddingTop: 8,
@@ -33,7 +35,8 @@ export default StyleSheet.create({
     txtcat:{
         fontSize : 16,
         fontWeight: 'bold',
-        color: colors.primary
+        color: colors.primary,
+        marginLeft: 4
     },
     rowsubcate: {
         paddingLeft: 16
